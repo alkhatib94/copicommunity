@@ -45,7 +45,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
             لو عندك أي سؤال أو استفسار، لا تتردد بالتواصل معي.
             <br /><br />
             <strong>شعارنا مثل شعار اللعبة:
-              حيث السماء هي الحد </strong>
+              حيث السماء لم تعد هي الحد</strong>
           </p>
         ) : (
           <p className="text-gray-300 text-center mt-4 max-w-2xl mx-auto leading-relaxed">
@@ -64,7 +64,7 @@ export default function Home({ params }: { params: { locale: Locale } }) {
             Communities are the backbone of the game, and we always love to welcome new members into ours.
             If you have any questions or concerns, don’t hesitate to contact me.
             <br /><br />
-            <strong>Our motto is the same as the game’s: The sky is the limit</strong>
+            <strong>Our motto is the same as the game’s: where the sky is no longer the limit</strong>
           </p>
         )}
       </header>
