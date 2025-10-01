@@ -1,0 +1,66 @@
+# Guide: How to Set Up a File Node Pool
+
+File Nodes are introduced [here](/company/technology/copi-nodes) in the copiwiki, what follows is instructions on how to setup and host one.
+
+<br />
+
+## Steps
+
+- [Introduction](/docs/nodes/guide-file-node-pool/introduction)
+- [Pool Server Setup](/docs/nodes/guide-file-node-pool/pool-server-setup)
+- [Updating and VerifyingPool Server](/docs/nodes/guide-file-node-pool/update-verify-server)
+- [Managing Pool Server](/docs/nodes/guide-file-node-pool/manage-server)
+- [Node Rewards](/docs/nodes/guide-file-node-pool/node-rewards)
+- [Public Pools](/docs/nodes/guide-file-node-pool/public-pools)
+
+<br />
+
+<div className="note-box danger transparent">
+  If you plan on setting up your node pool locally you might want to check to make sure your network supports port forwarding (required for nodes) natively.
+</div>
+
+<br />
+
+On the local machine you plan to run the node pool on, open a command prompt (cmd on Windows) and type:
+
+<div
+  className="rounded-xl border border-white/10 bg-zinc-900/60 p-4 font-mono text-sm overflow-x-auto"
+  dir="ltr"
+>
+  <pre className="whitespace-pre-wrap m-0"><code className="language-bash">tracert [your_ip_address]</code></pre>
+</div>
+
+Replace <code>[your_ip_address]</code> with your actual IP address (you can search “what is my ip” online).  
+You should only see <b>one hop/line</b>. If you see multiple, your network does not support port forwarding natively.
+
+<br />
+
+## Example
+
+<div
+  className="rounded-xl border border-white/10 bg-zinc-900/60 p-4 font-mono text-sm overflow-x-auto"
+  dir="ltr"
+>
+  <pre className="whitespace-pre-wrap m-0"><code className="language-bash">tracert 64.233.176.138
+Expected Result: 1 &lt;1 ms &lt;1 ms &lt;1 ms 199-119-153-199-119-153-27.cpe.sparklight.net [199.118.152.28]</code></pre>
+</div>
+
+<br />
+
+(the numbers don’t matter, but you should only have 1 line)
+
+<br />
+
+<figure className="img-center my-6">
+  <iframe
+    className="w-full aspect-video rounded-xl border border-white/10"
+    src="https://www.youtube.com/embed/BDe4XdVUILo"
+    title="File Node Pool Setup"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+  <figcaption className="mt-2 text-sm text-white/70">
+    Watch the full guide on how to set up your File Node Pool.
+  </figcaption>
+</figure>

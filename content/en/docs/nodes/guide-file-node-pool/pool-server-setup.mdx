@@ -1,0 +1,290 @@
+# Pool Server Setup
+
+## Helpful Skills
+
+Running a pool server will require some advanced technical knowledge. The following are some of the skills that may be required in running a successful pool server:
+
+<ul className="styled-list list-disc pl-6 space-y-2">
+  <li>
+    General docker understanding. (
+    <a href="https://docker.com" target="_blank" rel="noopener noreferrer">https://docker.com</a>
+    )
+  </li>
+  <li>Running commands on the command line. This could be Windows or Linux.</li>
+  <li>Understanding of general networking, firewalls, and internet router configurations.</li>
+  <li>Looking at logs of data events to help with troubleshooting.</li>
+</ul>
+
+<br />
+
+## Before Starting
+
+Before starting the setup process you might want to check to make sure your network supports port forwarding natively. To do this, start by finding your public IP address. Most search engines like Google will provide this information if you search **"What is my IP?"**.
+
+Next, open your command prompt (**cmd** on Windows). Type the command `tracert X.X.X.X` replacing the X's with your public IP address. Trace route (or **tracert**) will show the "hops" from your location to another IP address. If there is only one "hop" or line then you should be able to use port forwarding. If you see more than one "hop", then you should contact your ISP before proceeding.
+
+**Example:**
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4">tracert [your_ip_address]</pre>
+
+**Expected Result:**
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4">1 &lt;1 ms &lt;1 ms &lt;1 ms 199-119-153-199-119-153-27.cpe.sparklight.net [199.118.152.28]</pre>
+
+*(the numbers don't matter, but you should only have 1 line)*
+
+<br />
+
+## Create Pool Server Config
+
+If the player is a node owner, then they should be able to see a section in the UI for managing their pool servers. Click on the link to manage pool servers, and click **“Create Pool Server”**.
+
+Enter the name of the pool. The name of the pool should be a concise description of the pool. This is especially important if the player will likely be running multiple pool servers and even running one or more public servers.
+
+Once the pool server is created, a **secret access key** will be presented. This key will be used in running the pool server. This is how the pool server software will know its configurations and provide performance information for its nodes that will yield rewards. **Store this key in a safe place.**
+
+<br />
+
+## Refreshing Pool Server Access Key
+
+The pool access key does need to be kept secret, but if there is any reason that a node owner suspects that the key has been compromised, go to the pool management section of the player account. Click to see the details of the pool server in question. Click on the button to **refresh the access key**. The access key will be shown **one time only**. It is recommended that the access key be replaced in the `docker-compose.yml` configuration immediately since the old access key will no longer work. Once the configuration is updated, restart the docker container with the command:
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4">docker compose up -d</pre>
+
+<br />
+
+## Delegate File Node
+
+The last step in creating a new pool server is to delegate a node. It is possible to run a pool server without a node. However, **no work will be allocated** to the pool unless at least one node is delegated to the pool.
+
+In order to delegate a node, go to the **Node** section of the player account, and choose a node that has not been delegated. Click the button that says **delegate node**. When a dialog box appears, it should allow the selection of available pools. Choose a pool and click **OK**.
+
+<br />
+
+## Installing Docker
+
+Docker is the chosen technology to roll out the pool server technology. This was chosen for several reasons:
+
+<ol className="styled-list list-decimal pl-6 space-y-2">
+  <li>
+    <b>Isolation:</b> docker runs containers that will not allow host applications to affect the container and the container cannot negatively affect the host applications.
+  </li>
+  <li>
+    <b>Ease of configuration:</b> Most of the setup and configuration is done when the image is created. To containerize the image, only a few variables need to be set to get the docker to work as expected.
+  </li>
+  <li>
+    <b>Platform choice:</b> Docker can run on Windows, Linux, and Mac. It can also run on many NAS devices and on many cloud servers.
+    <i> Note:</i> Cornucopias will not test every platform. Stick with Windows and Linux for the best support. We will not prevent the images to be run in other configurations. However, watch your performance metrics!
+  </li>
+</ol>
+
+### Windows
+
+Running docker on Windows is best facilitated using **Docker Desktop**. Use the following URL to download and install the tool. If you are new to docker, there should be a lot of information available to give you confidence that it is a safe and useful tool.
+
+<a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener noreferrer">https://www.docker.com/products/docker-desktop/</a>
+
+Docker Desktop will run on Linux and Mac. Follow these instructions for Mac and Desktop Linux.
+
+### Linux
+
+Running docker on Linux might be a little more complicated. It is possible to run Docker Desktop on desktop Linux. However, these instructions will focus on a command line installation of **Docker Engine**. Think of this as the “server” approach. These instructions will help to deploy to home Linux servers and cloud servers. Obviously, there are many distributions and versions of Linux, and this document is not meant to be exhaustive. Instead, refer to the docker documentation for latest information on installing docker engine.
+
+<a href="https://docs.docker.com/engine/install/" target="_blank" rel="noopener noreferrer">https://docs.docker.com/engine/install/</a>
+
+Once the installation is complete, running the command below should return an empty set of running containers:
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4">docker ps</pre>
+
+<br />
+
+## Creating Public Access
+
+Creating public access to a pool server might be the trickiest part of this setup. It is important to make this right because it might open up your private network to the public Internet. **Do this at your own risk.** Also, please only forward necessary ports to your internal host. Redirecting all Internet traffic to an internal host is **NOT** recommended. (Some routers may have this option)
+
+- First, determine the public port number. If running behind a NAT (like at home), configure port forwarding for **port `8001/tcp`** on the router.  
+- The port should be forwarded to the internal IP address that the pool server is running on and port `8001/tcp`.  
+  - Example: configure `8001/tcp` on the router to forward to `192.168.1.22:8001/tcp`.  
+- Some networks may change the internal IP address unexpectedly, so it is best practice to configure the internal host to have a **static IP address**.
+
+The IP address and ports may differ in various configurations, and the pool server configuration should be able to accommodate many different configurations.
+
+If running in the **AWS** cloud, configure the **security group** to allow tcp access to **port `8001/tcp`**.
+
+The following are some videos that might help setting up a port forward:
+
+- <a href="https://www.youtube.com/watch?v=jfSLxs40sIw" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=jfSLxs40sIw</a>
+
+<br />
+
+## Choosing Cache Storage
+
+Choose a location on the computer that can hold all of the cache files. Here are some of the considerations:
+
+<ol className="styled-list list-decimal pl-6 space-y-2">
+  <li>
+    Which drive contains enough free space? There could be **100G** of cache files as the project starts getting up to speed.
+  </li>
+  <li>
+    Drive speed can be important. NVMe drives are much faster than spinning disks. Using a spinning drive might make the most sense for capacity, but note that the validation of cache files will take longer on these drives.
+    This will not be a long term issue because it is on the roadmap to fix.
+  </li>
+</ol>
+
+Now that the cache folder is chosen, the container can be started.
+
+<br />
+
+## Starting the Container
+
+There are various ways that the container can be managed. A long command on the terminal or creating the container in the desktop application are both options that have been considered. The long command is too error prone, and believe it or not, the desktop creation of the container is cumbersome and error prone as well. **Docker Compose** is the strategy that is the best solution for giving and receiving instructions for how to run this container. How about some terminology?
+
+- **Docker Image:** An image is the template for which a container will run. All of the software and dependencies have been packaged up and downloaded as an image.  
+- **Docker Container:** A container is an image that has been run. Once an image has been run, it creates a state, and that state is stored as a container. If a new image is available, a container needs to be recreated in order to take advantage of the updated image.  
+- **YAML:** Docker compose uses a file called `docker-compose.yml`. Call this the docker compose file or the YAML file.
+
+Before starting the container, take a look at the variables that need to be updated. These variables will be in the docker compose configuration file, and can be changed easily.
+
+<br />
+
+## Environmental Variables
+
+<div className="table-wrapper styled-table mx-auto">
+  <table className="min-w-full border border-white/10 text-sm text-left">
+    <thead className="bg-zinc-900/60">
+      <tr>
+        <th className="border border-white/10 px-4 py-2 w-1/3">Variable</th>
+        <th className="border border-white/10 px-4 py-2 w-1/3">Value</th>
+        <th className="border border-white/10 px-4 py-2 w-1/3">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_API_URL</td>
+        <td className="border border-white/10 px-4 py-2">https://filenodes.api.conucopiasweb.io</td>
+        <td className="border border-white/10 px-4 py-2">
+          <b>Not Recommended:</b> This is the hostname that will be used to receive instructions.  
+          The hostname will change when moving from staging to production, for example.
+        </td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_ACCESS_KEY</td>
+        <td className="border border-white/10 px-4 py-2">Unique key</td>
+        <td className="border border-white/10 px-4 py-2">
+          Each pool server will have its own unique key that authenticates and authorizes it for participation.
+        </td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_PUBLIC_PORT</td>
+        <td className="border border-white/10 px-4 py-2">8001</td>
+        <td className="border border-white/10 px-4 py-2">Public port used for client access to cached files.</td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_PUBLIC_HOST</td>
+        <td className="border border-white/10 px-4 py-2">None</td>
+        <td className="border border-white/10 px-4 py-2">
+          <b>Not Recommended:</b> Use only if the IP is not determined correctly by the filenodes service.
+        </td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_PUBLIC_PATH</td>
+        <td className="border border-white/10 px-4 py-2">cache</td>
+        <td className="border border-white/10 px-4 py-2">
+          <b>Not Recommended:</b> Use this to change the base URL path to access cached files.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<br />
+
+## Docker Compose Configuration
+
+The following is an example docker compose configuration. Please create a folder on your computer that will have plenty of free disk space (**100G-250G**), and create the file **`docker-compose.yml`**. Copy and paste the template below, and carefully update the access key, public url, and cache path. Save the file and move to starting the container.
+
+<br />
+
+## Step by Step Docker Configuration
+
+<ol className="styled-list list-decimal pl-6 space-y-3">
+  <li>
+    Create a working folder. For example: <code>D:\CornPoolServer</code>.
+    <ol type="a" className="list-[lower-alpha] pl-6 mt-2 space-y-1">
+      <li>Open up explorer to where you would like to create your working folder.</li>
+      <li>Right click in the open space and select <b>New → Folder</b>.</li>
+      <li>Name your folder then hit enter.</li>
+      <li>Double click on the folder to go into that newly created folder.</li>
+    </ol>
+  </li>
+
+  <li>
+    Create a folder inside that folder for the pool server cache. For example: <code>D:\CornPoolServer\cache</code>
+    <ol type="a" className="list-[lower-alpha] pl-6 mt-2 space-y-1">
+      <li>Right click in the open space and select <b>New → Folder</b>.</li>
+      <li>Name your folder (<code>cache</code>) then hit enter.</li>
+      <li>Do not double click on this folder for the next step. In the future, you may navigate to the folder to watch all of the cache files being created.</li>
+    </ol>
+  </li>
+
+  <li>Use a text editor or notepad to create a <code>docker-compose.yml</code> file inside the working folder. For example: <code>D:\CornPoolServer\docker-compose.yml</code>. <i>Note:</i> If using Notepad you will need to “Save As…”, then select “All Files” and make sure the file name ends in <code>.yml</code>.</li>
+  <li>Copy and paste the docker compose template below into the <code>docker-compose.yml</code> file. <b>Note:</b> indentation and spacing matter.</li>
+  <li>Should the container always restart? For testing or manual management, change the <code>restart</code> value to <code>no</code>.</li>
+  <li>Update the access key. Copy and paste the access key that was provided.</li>
+  <li>Ensure that the public port matches your router’s port forward.</li>
+  <li>Configure the cache folder. Update the path mapping to the internal docker path with a filesystem path. Example: <code>D:\CornPoolServer\Cache:/cache</code>.</li>
+</ol>
+
+**Sample `docker-compose.yml` with cache configured to path**
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4">
+name: cornucopias
+services:
+  pool-server:
+    image: public.ecr.aws/cornucopias/nodes/pool-server:latest
+    ports:
+      - "8001:8001"
+    restart: unless-stopped # if you want to manually start the pool server replace “unless-stopped” with “no”
+    environment:
+      FILENODES_POOL_ACCESS_KEY: &lt;PASTE ACCESS KEY HERE&gt;
+      FILENODES_POOL_PUBLIC_PORT: 8001
+    volumes:
+      - D:\CornPoolServer\Cache:/cache
+</pre>
+
+<br />
+
+## Starting Docker
+
+<div className="note-box ">
+  <b>Starting docker is pretty easy.</b> Do not get intimidated by using the command line. Ask for help.
+</div>
+
+1) Open **PowerShell** or **cmd**.  
+<figure className="img-center my-4">
+  <img src="/images/nodes/pool-server/powershell.avif" alt="Open PowerShell or cmd" />
+  <figcaption className="text-sm text-white/70 mt-2">Opening PowerShell or CMD</figcaption>
+</figure>
+
+2) Change to working folder.  
+<figure className="img-center my-4">
+  <img src="/images/nodes/pool-server/change-folder.avif" alt="Change to working folder" />
+  <figcaption className="text-sm text-white/70 mt-2">Navigate to your working folder</figcaption>
+</figure>
+
+3) Start pool server using the command:  
+<figure className="img-center my-4">
+  <img src="/images/nodes/pool-server/docker-up.avif" alt="Start pool server" />
+  <figcaption className="text-sm text-white/70 mt-2">Run the pool server with Docker Compose</figcaption>
+</figure>
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4">
+docker compose up -d
+</pre>
+
+<br />
+
+<br />
+
+<br />

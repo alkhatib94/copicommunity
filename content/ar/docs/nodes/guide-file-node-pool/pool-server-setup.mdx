@@ -1,0 +1,283 @@
+# إعداد خادم التجمع (Pool Server Setup)
+
+## مهارات مفيدة
+
+تشغيل خادم التجمع يتطلب معرفة تقنية متقدمة. فيما يلي بعض المهارات التي قد تحتاجها لتشغيل خادم تجمع بنجاح:
+
+<ul className="styled-list list-disc pl-6 space-y-2">
+  <li>
+    فهم عام لـ Docker (
+    <a href="https://docker.com" target="_blank" rel="noopener noreferrer">https://docker.com</a>
+    )
+  </li>
+  <li>تشغيل الأوامر عبر سطر الأوامر (Windows أو Linux).</li>
+  <li>فهم أساسيات الشبكات والجدران النارية وإعدادات أجهزة التوجيه (الراوتر) على الإنترنت.</li>
+  <li>قراءة سجلات الأحداث (Logs) للمساعدة في استكشاف الأخطاء وإصلاحها.</li>
+</ul>
+
+<br />
+
+## قبل البدء
+
+قبل بدء عملية الإعداد قد ترغب في التأكد من أن شبكتك تدعم تحويل المنافذ (Port Forwarding) بشكلٍ مباشر. للقيام بذلك، ابدأ بإيجاد  IP العام الخاص بك. أغلب محركات البحث - مثل Google - تعرضه عند البحث عن **"What is my IP?"**.
+
+بعدها افتح موجّه الأوامر (**cmd** على Windows)، واكتب الأمر `tracert X.X.X.X` مع استبدال X ب IP العام الخاص بك. سيعرض Trace Route (أو **tracert**) عدد "القفزات" (hops) من موقعك إلى  IP آخر. إذا ظهرت **قفزة واحدة فقط** فهذا يعني غالبًا أن تحويل المنافذ متاح. إذا رأيت أكثر من قفزة، تواصل مع مزود خدمة الإنترنت (ISP) قبل المتابعة.
+
+**مثال:**
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4" dir="ltr">tracert [your_ip_address]</pre>
+
+**النتيجة المتوقعة:**
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4" dir="ltr">1 &lt;1 ms &lt;1 ms &lt;1 ms 199-119-153-199-119-153-27.cpe.sparklight.net [199.118.152.28]</pre>
+
+*(الأرقام لا تهم، المهم أن تظهر سطرًا واحدًا فقط)*
+
+<br />
+
+## إنشاء إعدادات خادم التجمع
+
+إذا كان اللاعب مالكًا لعُقدة (Node)، فسيظهر له في الواجهة قسم لإدارة خوادم التجمع. انقر على رابط **إدارة خوادم التجمع**، ثم اضغط **“Create Pool Server”**.
+
+أدخل اسم التجمع. يُفضّل أن يكون الاسم موجزًا وواصفًا للتجمع - خصوصًا إذا كنت ستشغّل عدة خوادم تجمع وربما خوادم عامة أيضًا.
+
+بعد إنشاء خادم التجمع ستظهر لك **مفتاح وصول سري** (Secret Access Key). سيُستخدم هذا المفتاح عند تشغيل خادم التجمع، وهو ما يمكّن البرمجية من معرفة إعداداتها وإرسال بيانات الأداء لعُقدك بما يؤثر على المكافآت. **احفظ هذا المفتاح في مكان آمن.**
+
+<br />
+
+## تحديث مفتاح الوصول لخادم التجمع
+
+يجب الحفاظ على سرّية مفتاح الوصول، ولكن إن اشتبهت - لأي سبب - بأنه قد تسرّب، انتقل إلى قسم إدارة خوادم التجمع في حسابك. اعرض تفاصيل خادم التجمع المعني، ثم انقر زر **تحديث مفتاح الوصول**. سيُعرض المفتاح **مرّة واحدة فقط**. نوصي فورًا باستبدال المفتاح في ملف الإعدادات `docker-compose.yml` لأن المفتاح القديم سيتوقف عن العمل. بعد التحديث، أعد تشغيل الحاوية بالأمر:
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4" dir="ltr">docker compose up -d</pre>
+
+<br />
+
+## تفويض عقدة الملفات 
+
+آخر خطوة عند إنشاء خادم التجمع هي تفويض عُقدة له. يمكن تشغيل خادم تجمع بلا عقدة، لكن **لن يُخصَّص أي عمل** له إن لم تُفوَّض إليه عقدة واحدة على الأقل.
+
+للتفويض انتقل إلى قسم **Node** في حساب اللاعب، واختر عقدة غير مُفوَّضة. اضغط زر **delegate node**. عند ظهور نافذة الحوار، ستتمكن من اختيار التجمعات المتاحة. اختر التجمع واضغط **OK**.
+
+<br />
+
+## تثبيت Docker
+
+تم اختيار Docker لتوزيع تقنية خادم التجمع للأسباب التالية:
+
+<ol className="styled-list list-decimal pl-6 space-y-2">
+  <li>
+    <b>العزل (Isolation):</b> يعمل Docker بحاويات تمنع تطبيقات النظام من التأثير على الحاوية وبالعكس.
+  </li>
+  <li>
+    <b>سهولة الإعداد:</b> معظم الإعدادات تُضمَّن أثناء بناء الصورة (Image). لتشغيلها، يكفي تحديد عدد قليل من المتغيّرات.
+  </li>
+  <li>
+    <b>تعدد المنصات:</b> Docker يعمل على Windows وLinux وMac، وكذلك على الكثير من أجهزة NAS والسيرفرات السحابية.
+    <i> ملاحظة:</i> Cornucopias لن تختبر كل منصة. التزم بـ Windows وLinux لأفضل دعم. يُمكنك تشغيل الصور ببيئات أخرى على مسؤوليتك مع مراقبة الأداء.
+  </li>
+</ol>
+
+### Windows
+
+أفضل طريقة على Windows هي **Docker Desktop**. نزّل وثبّت من الرابط:
+
+<a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener noreferrer">https://www.docker.com/products/docker-desktop/</a>
+
+كما يدعم Docker Desktop أنظمة Mac وLinux المكتبية - اتبع تعليمات المنصة المناسبة.
+
+### Linux
+
+قد يكون تشغيل Docker على Linux أعقد قليلًا. يمكنك استخدام Docker Desktop على توزيعات سطح المكتب، لكن هنا سنركّز على تثبيت **Docker Engine** عبر سطر الأوامر (نهج الخادم). راجع توثيق Docker لأحدث خطوات التثبيت:
+
+<a href="https://docs.docker.com/engine/install/" target="_blank" rel="noopener noreferrer">https://docs.docker.com/engine/install/</a>
+
+بعد اكتمال التثبيت، يفترض أن يُظهر الأمر التالي عدم وجود حاويات قيد التشغيل:
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4" dir="ltr">docker ps</pre>
+
+<br />
+
+## إنشاء وصول عام 
+
+إتاحة الوصول العام لخادم التجمع هي غالبًا أصعب خطوة. احذر لأنك قد تفتح شبكتك الداخلية للإنترنت العام. **نفّذ ذلك على مسؤوليتك.** ولا تقم إلا بتمرير المنافذ المطلوبة فقط إلى مضيفك الداخلي - إعادة توجيه كل حركة الإنترنت إلى مضيف داخلي **غير مُستحسنة**.
+
+- أولًا حدّد رقم المنفذ العام. إذا كنت خلف NAT (كالمنزل)، فعليك تهيئة تحويل منفذ **`8001/tcp`** في الراوتر.  
+- وجّه هذا المنفذ إلى  IP الداخلي الذي يعمل عليه خادم التجمع وعلى نفس المنفذ **`8001/tcp`**.  
+  - مثال: تحويل `8001/tcp` في الراوتر إلى `192.168.1.22:8001/tcp`.  
+- قد يتغيّر  IP الداخلي تلقائيًا في بعض الشبكات، لذا من الأفضل ضبط ** IP ثابت** للمضيف الداخلي.
+
+قد تختلف عناوين IP والمنافذ حسب الإعدادات، ويجب أن يستطيع خادم التجمع التكيّف مع تكوينات متعددة.
+
+إذا شغّلت الخادم على **AWS**، فقم بضبط **Security Group** للسماح باتصالات **tcp على المنفذ `8001/tcp`**.
+
+بعض الفيديوهات المفيدة لإعداد Port Forwarding:
+
+- <a href="https://www.youtube.com/watch?v=jfSLxs40sIw" target="_blank" rel="noopener noreferrer">https://www.youtube.com/watch?v=jfSLxs40sIw</a>
+
+<br />
+
+## اختيار مساحة التخزين المؤقت 
+
+اختر موقعًا على جهازك لتخزين ملفات الـ Cache. اعتبارات مفيدة:
+
+<ol className="styled-list list-decimal pl-6 space-y-2">
+  <li>
+    أي قرص يملك مساحة كافية؟ قد تحتاج إلى 100 جيجا عند بدء المشروع بالتوسّع.
+  </li>
+  <li>
+    سرعة القرص مهمة. أقراص NVMe أسرع بكثير من الأقراص الميكانيكية. قد تختار قرصًا ميكانيكيًا لسعة أكبر، لكن التحقق من سلامة ملفات الكاش سيستغرق أطول. (هناك تحسينات مخططة ستخفف هذا الأثر مستقبلًا).
+  </li>
+</ol>
+
+بعد اختيار مجلد الكاش يمكنك بدء تشغيل الحاوية.
+
+<br />
+
+## تشغيل الحاوية 
+
+هناك طرق متعددة لإدارة الحاوية: أمر طويل عبر الطرفية، أو عبر تطبيق سطح المكتب. الأوامر الطويلة عرضة للأخطاء، وإنشاء الحاوية من التطبيق مرهق أيضًا. لذلك يُعد **Docker Compose** الخيار الأفضل لتحديد طريقة تشغيل الحاوية. بعض المصطلحات:
+
+- **Docker Image:** صورة تحتوي البرنامج والاعتمادات (Dependencies).  
+- **Docker Container:** مثالٌ قيد التشغيل من الصورة، يحمل حالة منفصلة. لتحديثه لصورة أحدث تحتاج عادةً إلى إعادة إنشائه.  
+- **YAML:** ملف تكوين Docker Compose باسم `docker-compose.yml`.
+
+قبل التشغيل، ألقِ نظرة على المتغيرات التي ستحتاج لتحديثها في ملف التكوين.
+
+<br />
+
+## المتغيّرات البيئية 
+
+<div className="table-wrapper styled-table mx-auto rtl">
+  <table className="min-w-full border border-white/10 text-sm text-left">
+    <thead className="bg-zinc-900/60">
+      <tr>
+        <th className="border border-white/10 px-4 py-2 w-1/3">المتغيّر</th>
+        <th className="border border-white/10 px-4 py-2 w-1/3">القيمة</th>
+        <th className="border border-white/10 px-4 py-2 w-1/3">الوصف</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_API_URL</td>
+        <td className="border border-white/10 px-4 py-2">https://filenodes.api.conucopiasweb.io</td>
+        <td className="border border-white/10 px-4 py-2">
+          <b>غير مُستحسن تعديله:</b> اسم المضيف الذي تُستقبل عبره التعليمات. قد يتغيّر عند الانتقال من بيئة Staging إلى Production.
+        </td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_ACCESS_KEY</td>
+        <td className="border border-white/10 px-4 py-2">مفتاح فريد</td>
+        <td className="border border-white/10 px-4 py-2">
+          لكل خادم تجمع مفتاحه الخاص للمصادقة والتخويل للمشاركة.
+        </td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_PUBLIC_PORT</td>
+        <td className="border border-white/10 px-4 py-2">8001</td>
+        <td className="border border-white/10 px-4 py-2">المنفذ العام لوصول العملاء إلى ملفات الكاش.</td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_PUBLIC_HOST</td>
+        <td className="border border-white/10 px-4 py-2">None</td>
+        <td className="border border-white/10 px-4 py-2">
+          <b>غير مُستحسن تعديله:</b> استخدمه فقط إذا تعذّر على خدمة filenodes تحديد  IP بشكل صحيح.
+        </td>
+      </tr>
+      <tr>
+        <td className="border border-white/10 px-4 py-2">FILENODES_POOL_PUBLIC_PATH</td>
+        <td className="border border-white/10 px-4 py-2">cache</td>
+        <td className="border border-white/10 px-4 py-2">
+          <b>غير مُستحسن تعديله:</b> لتغيير المسار الأساسي لروابط الوصول إلى ملفات الكاش.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<br />
+
+## تهيئة Docker Compose
+
+فيما يلي مثال لملف Docker Compose. أنشئ مجلدًا على جهازك بمساحة حرة كافية (**100-250 جيجابايت**)، ثم أنشئ ملف **`docker-compose.yml`**. انسخ القالب وحدّث مفتاح الوصول و الوصول العام ومسار الكاش بعناية، ثم احفظ الملف وانتقل للتشغيل.
+
+<br />
+
+## الإعداد خطوة بخطوة
+
+<ol className="styled-list list-decimal pl-6 space-y-3">
+  <li>
+    أنشئ مجلد العمل - مثلًا: <code>D:\CornPoolServer</code>.
+    <ol type="a" className="list-[lower-alpha] pl-6 mt-2 space-y-1">
+      <li>افتح مستكشف الملفات في المكان المرغوب.</li>
+      <li>انقر يمينًا واختر <b>New → Folder</b>.</li>
+      <li>سمِّ المجلد واضغط Enter.</li>
+      <li>ادخل إلى المجلد الجديد.</li>
+    </ol>
+  </li>
+
+  <li>
+    أنشئ داخله مجلدًا للكاش - مثلًا: <code>D:\CornPoolServer\cache</code>
+    <ol type="a" className="list-[lower-alpha] pl-6 mt-2 space-y-1">
+      <li>انقر يمينًا واختر <b>New → Folder</b>.</li>
+      <li>سمِّ المجلد (<code>cache</code>) واضغط Enter.</li>
+      <li>لا تدخل هذا المجلد في الخطوة التالية؛ لاحقًا ستتمكن من مشاهدة ملفات الكاش تتكوّن بداخله.</li>
+    </ol>
+  </li>
+
+  <li>باستخدام محرر نصوص (أو Notepad) أنشئ ملف <code>docker-compose.yml</code> داخل مجلد العمل - مثال: <code>D:\CornPoolServer\docker-compose.yml</code>. <i>ملاحظة:</i> في Notepad استخدم “Save As…” واختر “All Files” وتأكد من أن الامتداد <code>.yml</code>.</li>
+  <li>انسخ قالب Docker Compose أدناه داخل الملف. <b>تنبيه:</b> المسافات البادئة (Indentation) مهمة.</li>
+  <li>هل تريد للحاوية أن تعيد التشغيل دائمًا؟ للاختبار أو الإدارة اليدوية غيّر قيمة <code>restart</code> إلى <code>no</code>.</li>
+  <li>حدّث مفتاح الوصول بلصق المفتاح الذي حصلت عليه.</li>
+  <li>تأكد من أن المنفذ العام يطابق إعداد تحويل المنفذ في الراوتر.</li>
+  <li>اضبط مسار الكاش بربطه بمسار النظام المحلي - مثال: <code>D:\CornPoolServer\Cache:/cache</code>.</li>
+</ol>
+
+**مثال `docker-compose.yml` مع تهيئة الكاش لمسار محدد**
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4" dir="ltr">
+name: cornucopias
+services:
+  pool-server:
+    image: public.ecr.aws/cornucopias/nodes/pool-server:latest
+    ports:
+      - "8001:8001"
+    restart: unless-stopped # إذا أردت تشغيله يدويًا استبدل “unless-stopped” بـ “no”
+    environment:
+      FILENODES_POOL_ACCESS_KEY: &lt;PASTE ACCESS KEY HERE&gt;
+      FILENODES_POOL_PUBLIC_PORT: 8001
+    volumes:
+      - D:\CornPoolServer\Cache:/cache
+</pre>
+
+<br />
+
+## تشغيل Docker
+
+<div className="note-box ">
+  <b>تشغيل Docker سهل.</b> لا تدع سطر الأوامر يُربكك - وإن احتجت المساعدة، لا تتردد.
+</div>
+
+1) افتح **PowerShell** أو **cmd**.  
+<figure className="img-center my-4">
+  <img src="/images/nodes/pool-server/powershell.avif" alt="Open PowerShell or cmd" />
+  <figcaption className="text-sm text-white/70 mt-2">فتح PowerShell أو CMD</figcaption>
+</figure>
+
+2) انتقل إلى مجلد العمل.  
+<figure className="img-center my-4">
+  <img src="/images/nodes/pool-server/change-folder.avif" alt="Change to working folder" />
+  <figcaption className="text-sm text-white/70 mt-2">الانتقال إلى مجلد العمل</figcaption>
+</figure>
+
+3) شغّل خادم التجمع بالأمر:  
+<figure className="img-center my-4">
+  <img src="/images/nodes/pool-server/docker-up.avif" alt="Start pool server" />
+  <figcaption className="text-sm text-white/70 mt-2">تشغيل خادم التجمع عبر Docker Compose</figcaption>
+</figure>
+
+<pre className="whitespace-pre-wrap rounded-lg border border-white/10 bg-zinc-900/60 p-4" dir="ltr">
+docker compose up -d
+</pre>
+
+<br /><br /><br />

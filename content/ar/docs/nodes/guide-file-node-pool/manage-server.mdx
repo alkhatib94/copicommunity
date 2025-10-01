@@ -1,0 +1,49 @@
+# إدارة خادم التجمع 
+
+من وقت لآخر، ستحتاج خوادم التجمع إلى **تحديث** أو **إعادة تشغيل**.  
+فيما يلي بعض الأوامر التي يمكنك استخدامها لإعادة تشغيل الخادم وضمان استمرار كسب المكافآت.
+
+هذا النوع من الصيانة يتم عبر سطر الأوامر (Command Line)، لكن لا تقلق، فالأمر ليس صعبًا.  
+وبطريقة مشابهة لمثال **تغيير مسار العمل:** `cd d:\CornPoolServer`، انتقل دائمًا إلى نفس المسار قبل التنفيذ.
+
+</br>
+
+إذا احتجت لإيقاف خادم التجمع، يمكنك استخدام الأمر التالي:  
+(يمكنك أيضًا تنفيذ ذلك من خلال تطبيق **Docker Desktop**، ابحث عن الحاوية  المسماة **“pool-server-1”** واضغط زر الإيقاف Stop).
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash" dir="rtl">
+docker compose stop
+    </code>
+  </pre>
+</div>
+
+</br>
+
+إذا احتجت لإعادة تشغيل خادم التجمع، يمكنك الضغط على زر الإيقاف ثم زر التشغيل في **Docker Desktop**  
+أو تنفيذ الأمر التالي في نفس المجلد الذي يحتوي ملف `docker-compose.yml`.
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash" dir="rtl">
+docker compose restart
+    </code>
+  </pre>
+</div>
+
+</br>
+
+هذا هو الحد الأدنى من الصيانة المطلوب تنفيذه عبر سطر الأوامر.  
+يجدر بالذكر أن **Docker Desktop** يتحسن باستمرار، وقد يدعم تكاملًا أعمق مع **docker compose** في المستقبل،  
+ولكن حتى ذلك الوقت، هذه الأوامر ستساعدك على إعادة إنشاء الحاوية الخاصة بخادم التجمع.
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash" dir="rtl">
+docker compose stop
+docker compose rm
+docker compose up -d
+    </code>
+  </pre>
+</div>

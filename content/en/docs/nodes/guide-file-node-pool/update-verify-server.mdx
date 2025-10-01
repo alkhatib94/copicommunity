@@ -1,0 +1,40 @@
+# Updating and Verifying Pool Server
+
+> **TODO:** how will node owners be notified of upgrades.
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash">
+docker compose pull # only if you need a new version
+docker compose up -d # only if there is a new version or configuration change
+    </code>
+  </pre>
+</div>
+
+<figure className="img-center my-6">
+  <img src="/images/nodes/update-verify-placeholder.avif" alt="Update & Verify Pool Server" />
+</figure>
+
+## Verify Functionality
+
+There is a URL in the pool server that will allow the testing of the application and port forwarding.
+Testing from the same network may not provide correct results but it is valuable. If it fails on the same network, it will also fail on remote networks.
+
+<ol className="list-decimal pl-6 space-y-2">
+  <li>
+    Open this URL in web browser: <code>http://{`{PUBLIC_IP}`}:{`{PUBLIC_PORT}`}/health</code>.
+    Be sure to replace the <code>{`{PUBLIC_IP}`}</code> and <code>{`{PUBLIC_PORT}`}</code> with the real values that are being tested.
+  </li>
+  <li>When viewing in a browser, the result should be a simple <b>“Ok”</b>.</li>
+  <li>If the health check succeeds on the same network, pass the health URL to a friend for them to test.</li>
+  <li>What else would you like to see in the health check?</li>
+</ol>
+
+<p>
+  There should be some reports on the Pool server page that will show some recent performance numbers.
+  This will include last checkin and number of errors in the current checking period.
+</p>
+
+<div className="note-box ">
+  <b>Watch the logs!</b>
+</div>

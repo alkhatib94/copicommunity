@@ -1,0 +1,49 @@
+# Managing Pool Server
+
+From time to time, pool servers are going to need to be upgraded or restarted.  
+The following are a few commands that can be used to hopefully get your pool back to earning rewards.
+
+This kind of maintenance is using the command line, but don’t worry, it is not that hard.  
+Similarly to the example in **Change to working folder:** `cd d:\CornPoolServer`, go to that same path.
+
+</br>
+
+If the pool server needs to be stopped, then the following command can be used.  
+This function can also be achieved using the docker desktop. Find the container named **“pool-server-1”** and click the stop button.
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash">
+docker compose stop
+    </code>
+  </pre>
+</div>
+
+</br>
+
+If the pool server needs to be restarted, click the stop and start buttons in docker desktop  
+or execute this command in the same folder as the `docker-compose.yml` file.
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash">
+docker compose restart
+    </code>
+  </pre>
+</div>
+
+</br>
+
+This is the maintenance that must be done on the command line.  
+Docker desktop is improving, and it may provide deeper integration with docker compose in the future,  
+but until then, these commands will help to recreate the pool server container.
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash">
+docker compose stop
+docker compose rm
+docker compose up -d
+    </code>
+  </pre>
+</div>

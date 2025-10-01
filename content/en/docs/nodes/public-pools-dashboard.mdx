@@ -1,0 +1,113 @@
+# Public Pools Dashboard
+
+Overview and descriptions of the information represented in the public pools dashboard.  
+
+<iframe 
+  width="100%" 
+  height="450" 
+  src="https://www.youtube.com/embed/IP9Q5_4D_EE" 
+  title="Scruffy breaks down the public pools dashboard" 
+  frameborder="0" 
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+  allowfullscreen
+></iframe>
+
+>  Scruffy breaks down the public pools dashboard.
+
+
+</br>
+
+## Public Pools Dashboard
+
+The public pools dashboard can be found at this URL:  
+ https://cornucopias.io/nodes/pools  
+
+The dashboard is the focal point for **delegation**.  
+- Today: it simply shows performance info.  
+- Future: it will help you decide the best pool to delegate your file nodes.  
+
+The landing page lists **public pool servers** open for delegations, sorted by **performance strength** by default.
+
+</br>
+
+## Configuring a Public Pool
+
+Once a pool server has been created, configured, and validated, do the following to list it on the dashboard:
+
+1. Edit the pool and change its type to **public**.  
+2. Ensure at least **8 nodes** have been delegated to the pool.  
+
+⚠️ If the pool doesn’t appear right away, wait 24-48 hours. A full reward cycle may be needed to generate performance data.
+
+You can also **update the pool’s picture and description** to attract delegators.  
+ Pictures must be appropriate for all ages (final approval by Cornucopias team).
+
+</br>
+
+## Understanding the Public Pools Dashboard
+
+Here’s a breakdown of the columns you’ll see (this is where you can really flex your strategy :
+
+- **Picture** - Represents the pool visually.  
+- **Name** - Globally unique name (keep it concise).  
+- **Ticker** - A 3-5 character shorthand for the pool (unique).  
+- **Region** - Measured by network latency, not physical location. Possible values:  
+  - North America  
+  - Europe  
+  - Asia Pacific  
+  - South America  
+- **15 Day** - Total bytes served over the last 15 days.  
+- **Last Cycle** - Bytes served in the last reward cycle.  
+- **Saturation** - Shows available delegation slots.  
+  - 8 own nodes = 40 total delegations  
+  - 9 own nodes = 45 total delegations  
+  - 10 own nodes = 50 total delegations  
+  - FULL = no slots left  
+- **Active Cycles** - Consecutive active reward cycles (resets if server goes down for 24h).  
+- **Age** - Pool age since creation.  
+- **Strength** - Ranked performance (bars). Formula:  
+
+Strength = (Byte Rate) * (Success Rate) * (Cycles with ≥1 registration %)
+
+
+- **Byte Rate** = average bytes/sec (15 days).  
+- **Success Rate** = % of successful requests (15 days).  
+- **Cycles %** = % of cycles with ≥1 registration.  
+
+> Strong pools = faster + more reliable = ranked at the top.
+
+</br>
+
+## Sorting
+
+- Sort by **name**, **ticker**, or **strength**.  
+
+</br>
+
+## Filtering
+
+- Filter by **region**, **availability**, or **strength**.  
+
+</br>
+
+## Public Pool Detail
+
+When you click into a pool, you’ll see more detail:
+
+### Description  
+Pool owner’s mission, purpose, and reasons to delegate. Can include social links.
+
+### Graphs  
+
+- **Check-In Counts** - How often the pool checked in (availability).  
+- **Request Success Rate** - % of successful downloads vs. fails.  
+- **Delegations Count** - Number of delegations per day (15 days).  
+- **Speed** - Average bytes/sec (foundation of pool strength).  
+
+### Delegators  
+
+A full list of nodes currently delegated to the pool.
+
+</br>
+
+</br>

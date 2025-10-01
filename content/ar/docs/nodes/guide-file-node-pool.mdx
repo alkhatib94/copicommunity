@@ -1,0 +1,66 @@
+# الدليل: كيفية إعداد تجمع نود الملفات 
+
+تم تقديم نود الملفات [هنا](/company/technology/copi-nodes) في الـ **كوبي ويكي**، وما يلي هو تعليمات حول كيفية إعداد واستضافة واحد منها.  
+
+<br />
+
+## الخطوات
+
+- [المقدمة](/docs/nodes/guide-file-node-pool/introduction)  
+- [إعداد خادم التجمع](/docs/nodes/guide-file-node-pool/pool-server-setup)  
+- [تحديث والتحقق من خادم التجمع](/docs/nodes/guide-file-node-pool/update-verify-server)  
+- [إدارة خادم التجمع](/docs/nodes/guide-file-node-pool/manage-server)  
+- [مكافآت النود](/docs/nodes/guide-file-node-pool/node-rewards)  
+- [التجمعات العامة](/docs/nodes/guide-file-node-pool/public-pools)  
+
+<br />
+
+<div className="note-box danger rtl transparent">
+  إذا كنت تخطط لإعداد تجمع النود محليًا، تحقق أولاً من أن شبكتك تدعم <b>إعادة توجيه المنافذ (Port Forwarding)</b> بشكل افتراضي، لأنه مطلوب للنود.
+</div>
+
+<br />
+
+على الجهاز المحلي الذي تنوي تشغيل تجمع النود عليه، افتح موجّه الأوامر (cmd في Windows) واكتب:  
+
+<div
+  className="rounded-xl border border-white/10 bg-zinc-900/60 p-4 font-mono text-sm overflow-x-auto"
+  dir="ltr"
+>
+  <pre className="whitespace-pre-wrap m-0"><code className="language-bash">tracert [your_ip_address]</code></pre>
+</div>
+
+استبدل <code>[your_ip_address]</code> ب الـ IP الخاص بك (يمكنك البحث عن "what is my ip" على الإنترنت).  
+يجب أن ترى <b>قفزة/سطر واحد فقط</b>. إذا رأيت أكثر من واحد، فهذا يعني أن شبكتك لا تدعم إعادة توجيه المنافذ بشكل افتراضي.  
+
+<br />
+
+## مثال
+
+<div
+  className="rounded-xl border border-white/10 bg-zinc-900/60 p-4 font-mono text-sm overflow-x-auto"
+  dir="ltr"
+>
+  <pre className="whitespace-pre-wrap m-0"><code className="language-bash">tracert 64.233.176.138
+النتيجة المتوقعة: 1 &lt;1 ms &lt;1 ms &lt;1 ms 199-119-153-199-119-153-27.cpe.sparklight.net [199.118.152.28]</code></pre>
+</div>
+
+<br />
+
+(الأرقام لا تهم، المهم أن يظهر لديك سطر واحد فقط)
+
+<br />
+
+<figure className="img-center my-6">
+  <iframe
+    className="w-full aspect-video rounded-xl border border-white/10"
+    src="https://www.youtube.com/embed/BDe4XdVUILo"
+    title="إعداد تجمع نود الملفات"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowFullScreen
+  />
+  <figcaption className="mt-2 text-sm text-white/70">
+    شاهد الدليل الكامل حول كيفية إعداد تجمع نود الملفات.
+  </figcaption>
+</figure>

@@ -1,0 +1,142 @@
+# Reward Distribution
+<br />
+
+## Reward Pool Structure and Process
+
+Cornucopias will incentivize platform participants through its **reward pool**.  
+The specific actions eligible for incentives and the corresponding incentive amounts can be influenced by **governance**.
+
+The Cornucopias year will be divided into **Seasons** (each season = **13 calendar weeks**).  
+Rewards are allocated **per season** using the reward pool.
+
+**Initial incentivized actions include\***:
+- **10%** for staking **$COPI**
+- **18%** to **liquidity providers** that stake the LP token (see eligible pairs below)
+- **17%** to **node operators**
+- **55%** to **in-game rewards**, highlighting the commitment to rewarding skill and participation
+
+<br />
+
+<div className="alert-box">
+  <span className="icon">⚠️</span>
+  <span><em>*Percentage allocations are variable and subject to change each season, potentially ranging from 0% to an upper limit influenced by governance. This mechanism could also be temporarily inactive, all based on prioritizing the health and sustainability of the token ecosystem.</em></span>
+</div>
+
+The rewards will be distributed from a **fixed supply** reward pool at **variable frequencies**, based on the outstanding tokens in the pool.  
+Prior to the start of each season, a variable percentage, **not exceeding 0.025% (2.5 bps)**, will be applied to the rewards pool balance to estimate a daily average of rewards to be distributed throughout the season.
+
+For this calculation, the **starting Rewards Pool** = *Gameplay Rewards balance + Staking & Farming balance* (as displayed in **Token Metrics**).
+
+This setup means that:
+- The reward pool can **never be consumed** (rewards are a % of the outstanding pool).
+- The reward pool **decreases over time**.
+- The mechanism ensures **capped inflation** and works with **fixed supply** tokens (unlike perpetual inflation).
+
+<br />
+
+## Distribution Formula
+
+The rewards will be distributed based on the following formula:
+
+<div className="callout-code">
+  <span className="title">Simplified formula:</span>
+  <pre>Allocation of the Reward per User = (Contribution per User over the defined time period) / (Sum of the Contributions for All Users in the System for the defined time period)</pre>
+</div>
+
+<br />
+
+  <img src="/Token/reward-formula.png" alt="Reward distribution formula diagram" />
+</div>
+
+
+<br />
+
+## Contribution Components
+
+The user contribution is defined as follows (based on the items above):
+
+1. **Number of LP tokens staked**, **weighted by duration (Multiplier)**  
+   LP tokens are obtained on a DEX, then staked to the Cornucopias ecosystem contract. Approved DEXs and pairs:
+   - **Uniswap v2 (Eth): [COPI/WETH**](https://etherscan.io/address/0x57fc98c8b099c087d059ff3b72a3f43c2d8c229f)
+   - **Uniswap v2 (Base): [COPI/WETH**](https://basescan.org/address/0x9e6a565c2322f8646f2653352e771738a0ee75a3)
+   - **PancakeSwap v2 (BSC): [COPI/WBNB**](https://bscscan.com/address/0x73eda54a43c6a3d08ee30b089ef4c1bc3d0d4d9b)
+   - **Minswap (Cardano): [COPI/ADA**](https://cardanoscan.io/token/e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d867925263b1aff069a191db67d5ac185c029f7f43e084a4ef6e5fa2848a56e2aa6?address=addr1q8mgqjd8q3clxkp9yj6lgfr7lavywnyn57yxpn3p40nsd0whx6vsrwrcexaf2am8dlclrayz09zz9kvxrqnujm7lzagsys3ak9)
+
+
+2. **Number of $COPI tokens staked**, **weighted by duration (Multiplier)**
+
+3. **Users running nodes** (as described in the **Hosting** section)
+
+4. **Gameplay activities** (as described in the **Gameplay** section)
+
+<br />
+
+## Multiplier Mechanics
+<br />
+
+For items with a multiplier (LP staking & $COPI staking), define the contribution (**C**) as a function of the multiplier (**M**) and tokens staked (**T**):
+
+<br />
+
+  <img src="/Token/reward-formula2.png" alt="Contribution function" />
+</div>
+
+<br />
+
+We define the **multiplier (M)** as a function of the **staking duration (D)** in weeks:
+
+<br />
+
+  <img src="/Token/multiplier-func.png" alt="Multiplier as a function of duration" />
+</div>
+
+<br />
+
+This yields the following curve (multiplier increases over time, **capped at 100 weeks**):
+
+<br />
+
+
+  <img src="/Token/multiplier-curve.png" alt="Multiplier growth curve up to 100 weeks" />
+</div>
+
+<br />
+
+<div className="alert-box">
+  <span className="icon">⚠️</span>
+  <span>This approach was initially introduced by Curve’s vote-locking mechanism.</span>
+</div>
+
+<br />
+
+After the chosen duration expires, tokens remain staked and can be withdrawn **anytime**;  
+pools keep accumulating rewards with their **original multiplier** (e.g., 50-week stake → multiplier based on 50 weeks; 110-week stake → **capped** at the 100-week multiplier).
+
+<br />
+
+
+## Claiming & Spending Rewards
+
+Rewards earned are sent to a smart contract that facilitates one of two actions:
+
+- **Claim $COPI** to wallet (subject to an early claim fee or a vesting period).  
+- **Spend $COPI** freely in the **Marketplace** on all items.
+
+
+<br />
+
+## Replenishing the Reward Pools
+
+Some tokens are **redirected from revenue** to the Reward Pools:
+
+**Example:**
+1. User A purchases products worth **1,000 $COPI**.  
+2. Up to **10%** of collected fees (**100 $COPI**) is allocated to **replenishing the reward pool**.  
+3. The remaining **900 $COPI** sustains platform operations.
+
+<br />
+
+<div className="alert-box">
+  <span className="icon">⚠️</span>
+  <span>Up to 10% of all fees collected will be allocated towards replenishment of the reward pool.</span>
+</div>

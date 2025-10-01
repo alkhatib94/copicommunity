@@ -1,0 +1,40 @@
+# تحديث خادم التجمع والتحقّق منه 
+
+> **ملاحظة (TODO):** كيف سيتم إخطار مالكي العقد بوجود ترقيات؟
+
+<div>
+  <pre className="whitespace-pre-wrap m-0">
+    <code className="language-bash" dir="rtl">
+docker compose pull # فقط عند الحاجة لإصدار جديد
+docker compose up -d # فقط عند وجود إصدار جديد أو تغييرات في الإعدادات
+    </code>
+  </pre>
+</div>
+
+<figure className="img-center my-6">
+  <img src="/images/nodes/update-verify-placeholder.avif" alt="تحديث والتحقق من خادم التجمع" />
+</figure>
+
+## التحقق من العمل 
+
+يوجد في خادم التجمع رابط (URL) يتيح اختبار عمل التطبيق وتحقق إعداد تحويل المنفذ (Port Forwarding).
+الاختبار من نفس الشبكة قد لا يعطي نتائج دقيقة دائمًا، لكنه يظل مفيدًا. إذا فشل على نفس الشبكة، فسيفشل أيضًا على الشبكات البعيدة.
+
+<ol className="list-decimal pl-6 space-y-2">
+  <li>
+    افتح هذا الرابط في المتصفح: <code dir="rtl">http://{{PUBLIC_IP}}:{{PUBLIC_PORT}}/health</code>.
+    تأكد من استبدال <code dir="rtl">{{PUBLIC_IP}}</code> و<code dir="rtl">{{PUBLIC_PORT}}</code> بالقيم الفعلية التي تختبرها.
+  </li>
+  <li>عند عرضه في المتصفح، يجب أن تكون النتيجة كلمة <b>“Ok”</b> بسيطة.</li>
+  <li>إذا نجح فحص السلامة على نفس الشبكة، أرسل رابط الفحص إلى صديق ليختبره من شبكة خارجية.</li>
+  <li>ما الذي تودّ أن تراه أيضًا ضمن فحص السلامة (health check)؟</li>
+</ol>
+
+<p>
+  ينبغي أن تتوفر في صفحة خادم التجمع بعض التقارير التي تعرض أرقام الأداء الأخيرة،
+  بما في ذلك آخر وقت اتصال (last check-in) وعدد الأخطاء خلال فترة التحقق الحالية.
+</p>
+
+<div className="note-box ">
+  <b>راقب السجلات (Logs) باستمرار!</b>
+</div>
