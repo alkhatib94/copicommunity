@@ -12,7 +12,7 @@ const CATS: Array<{
 }> = [
   {
     slug: "apparel",
-    image: "/images/nfts/_categories/",
+    image: "/images/nfts/_categories/apparel.png",
     desc: {
       ar: "ملابس وإكسسوارات داخل اللعبة: أحذية، خوذات، وأطقم استكشاف.",
       en: "In-game wearables: boots, helmets, and scout outfits.",
@@ -28,7 +28,7 @@ const CATS: Array<{
   },
   {
     slug: "packs",
-    image: "/images/nfts/_categories/packs.jpg",
+    image: "/images/nfts/_categories/packs.png",
     desc: {
       ar: "حزم بعناصر وشخصيات ومعدات.",
       en: "Bundles with themed items and gear.",
@@ -36,7 +36,7 @@ const CATS: Array<{
   },
   {
     slug: "ships",
-    image: "/images/nfts/_categories/ships.jpg",
+    image: "/images/nfts/_categories/ships.png",
     desc: {
       ar: "مركبات طائرة للسباقات والتنقل.",
       en: "Flying vehicles for racing and traversal.",
@@ -44,7 +44,7 @@ const CATS: Array<{
   },
   {
     slug: "weapons",
-    image: "/images/nfts/_categories/weapons.jpg",
+    image: "/images/nfts/_categories/weapons.png",
     desc: {
       ar: "معدات قتالية عبر مختلف الندرات.",
       en: "Combat equipment across rarities.",
