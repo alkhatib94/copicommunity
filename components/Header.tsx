@@ -1,4 +1,3 @@
-import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Header({ locale }: { locale: "en" | "ar" }) {
   return (

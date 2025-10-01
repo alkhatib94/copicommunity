@@ -7,66 +7,65 @@ type Locale = "ar" | "en";
 export default function Home({ params }: { params: { locale: Locale } }) {
   const locale: Locale = params.locale === "ar" ? "ar" : "en";
   const dir = locale === "ar" ? "rtl" : "ltr";
-  const other = locale === "ar" ? "en" : "ar";
 
   return (
     <main dir={dir} className="max-w-5xl mx-auto p-6 bg-paper text-ink">
-      {/* الشعار + سويتشر اللغة */}
+      {/* الشعار (بدون زر تبديل اللغة) */}
       <header className="mb-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="mx-auto bg-brand/10 border border-border rounded-full px-8 py-4 shadow-lg">
-            <Image src="/cornucopias.png" alt="Cornucopias" width={200} height={60} />
+        <div className="flex items-center justify-center">
+          <div className="bg-brand/10 border border-border rounded-full px-8 py-4 shadow-lg">
+            <Image
+              src="/cornucopias.png"
+              alt="Cornucopias"
+              width={200}
+              height={60}
+              priority
+            />
           </div>
-
-          {/* سويتشر لغة بسيط */}
-          <Link
-            href={`/${other}`}
-            className="text-sm px-3 py-1 rounded-md border border-border/60 hover:border-yellow-400/60 text-gray-300 hover:text-yellow-200 transition"
-          >
-            {locale === "ar" ? "English" : "العربية"}
-          </Link>
         </div>
 
-        {locale === "ar" ? (
-          <p className="text-gray-300 text-center mt-4 max-w-2xl mx-auto leading-relaxed">
-            تم إنشاء هذا الموقع بهدف <strong>ترجمة وتبسيط محتوى ويكي كورنوكوبياس</strong> للعرب.
-            ويكي اللعبة الأصلي ضخم جدًا، وقراءته مرهقة خصوصًا لمن لغتهم الأم ليست الإنجليزية.
-            لكن لما تكون المعلومة بلغتك، بيصير الموضوع أسهل وأمتع وأقرب للقلب.
-            <br /><br />
-            <em>
-              ملاحظة مهمة: أنا لست مبرمجًا ولا مصممًا ولا مترجمًا معتمدًا.
-              هذا الموقع بالكامل تم بناؤه بمساعدة <strong>شات جي بي تي</strong> من حيث البرمجة والتطوير.
-              إذا واجهتك أي مشكلة في الموقع، أو لاحظت خطأ في الترجمة،
-              تقدر دائمًا تتواصل معي عبر وسائل التواصل أسفل الصفحة.
-            </em>
-            <br /><br />
-            وأخيرًا، في كورنوكوبياس مهم جدًا تكون جزء من <strong>مجتمع نشِط</strong>.
-            نحن نحب دائمًا أن نضيف أشخاصًا جدد لمجتمعنا ونرحب بالجميع.
-            لو عندك أي سؤال أو استفسار، لا تتردد بالتواصل معي.
-            <br /><br />
-            <strong>شعارنا مثل شعار اللعبة:
-              حيث السماء لم تعد هي الحد</strong>
-          </p>
-        ) : (
-          <p className="text-gray-300 text-center mt-4 max-w-2xl mx-auto leading-relaxed">
-            This website was created with the goal of <strong>translating and simplifying the Cornucopias Wiki</strong> for Arabic speakers.
-            The original Wiki is very large and can be exhausting to read, especially for those whose native language is not English.
-            But when the information is in your own language, it becomes easier, more enjoyable, and more engaging.
-            <br /><br />
-            <em>
-              Important note: I am not a programmer, designer, or certified translator.
-              This entire website was built with the help of <strong>ChatGPT</strong> for coding and development.
-              If you encounter any issues on the site, or notice a translation mistake,
-              you can always reach out to me through the contact details at the bottom of the page.
-            </em>
-            <br /><br />
-            Finally, in Cornucopias it is very important to be part of an <strong>active community</strong>.
-            Communities are the backbone of the game, and we always love to welcome new members into ours.
-            If you have any questions or concerns, don’t hesitate to contact me.
-            <br /><br />
-            <strong>Our motto is the same as the game’s: where the sky is no longer the limit</strong>
-          </p>
-        )}
+       {locale === "ar" ? (
+  <p className="text-gray-300 text-center mt-4 max-w-2xl mx-auto leading-relaxed">
+    تم إنشاء هذا الموقع بهدف <strong>ترجمة وتبسيط محتوى ويكي كورنوكوبياس</strong> للعرب.
+    ويكي اللعبة الأصلي ضخم جدًا، وقراءته مرهقة خصوصًا لمن لغتهم الأم ليست الإنجليزية.
+    لكن لما تكون المعلومة بلغتك، بيصير الموضوع أسهل وأمتع وأقرب للقلب.
+    <br /><br />
+    <em>
+      هذا المشروع مبادرة شخصية بالكامل، تم بناؤه بمساعدة <strong>شات جي بي تي</strong> من حيث البرمجة والتطوير.
+      إذا واجهتك أي مشكلة في الموقع، أو لاحظت خطأ في الترجمة،
+      تقدر دائمًا تتواصل معي عبر وسائل التواصل أسفل الصفحة.
+    </em>
+    <br /><br />
+    في <strong>كورنوكوبياس</strong>، المجتمع هو قلب اللعبة وروحها.
+    نحن نحب دائمًا أن نضيف أشخاصًا جدد لعائلتنا ونرحب بالجميع.
+    لو عندك أي سؤال أو استفسار، لا تتردد بالتواصل معي.
+    <br /><br />
+    <em>⚠️ هذا الموقع مجتمعي غير رسمي، وشعاره مستوحى من شعار لعبة كورنوكوبياس.</em>
+    <br /><br />
+    <strong> حيث السماء لم تعد هي الحد </strong>
+  </p>
+) : (
+  <p className="text-gray-300 text-center mt-4 max-w-2xl mx-auto leading-relaxed">
+    This website was created with the goal of <strong>translating and simplifying the Cornucopias Wiki</strong> for Arabic speakers.
+    The original Wiki is very large and can be exhausting to read, especially for those whose native language is not English.
+    But when the information is in your own language, it becomes easier, more enjoyable, and more engaging.
+    <br /><br />
+    <em>
+      This project is a personal initiative, built with the help of <strong>ChatGPT</strong> for coding and development.
+      If you encounter any issues on the site, or notice a translation mistake,
+      you can always reach out to me through the contact details at the bottom of the page.
+    </em>
+    <br /><br />
+    In <strong>Cornucopias</strong>, the community is the true heart of the game.
+    We always love welcoming new members into our family, and your presence makes a real difference.
+    If you have any questions or concerns, don’t hesitate to contact me.
+    <br /><br />
+    <em>⚠️ This is a community-driven, unofficial website, and its motto is inspired by the official Cornucopias game.</em>
+    <br /><br />
+    <strong> Where the sky is no longer the limit </strong>
+  </p>
+)}
+
       </header>
 
       {/* الروابط السريعة */}
@@ -90,7 +89,6 @@ export default function Home({ params }: { params: { locale: Locale } }) {
           </p>
           <Link
             href={`/${locale}/game/about-the-game`}
-            target="_blank"
             className="mt-4 inline-block bg-brand px-4 py-2 rounded-md text-white font-semibold text-center"
           >
             {locale === "ar" ? "اذهب" : "Visit"}
@@ -114,7 +112,6 @@ export default function Home({ params }: { params: { locale: Locale } }) {
           </p>
           <Link
             href={`/${locale}/nfts`}
-            target="_blank"
             className="mt-4 inline-block bg-brand px-4 py-2 rounded-md text-white font-semibold text-center"
           >
             {locale === "ar" ? "اذهب" : "Visit"}
