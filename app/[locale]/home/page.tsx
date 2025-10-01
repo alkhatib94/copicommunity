@@ -108,11 +108,11 @@ export default function Home({ params }: { params: { locale: Locale } }) {
             {locale === "ar" ? "مجموعات NFT" : "NFT Collections"}
           </h3>
           <p className="text-gray-300">
-            {locale === "ar" ? "استكشف مجموعات NFTs الخاصة باللعبة." : "Explore Cornucopias NFTs."}
+            {locale === "ar" ? "استكشف مجموعات NFTs الخاصة باللعبة." :      "Explore Cornucopias NFTs Collections."}
           </p>
           <Link
             href={`/${locale}/nfts`}
-            className="mt-4 inline-block bg-brand px-4 py-2 rounded-md text-white font-semibold text-center"
+            className="mt-4 inline-block bg-brand w-full px-4 py-2 rounded-md text-white font-semibold text-center"
           >
             {locale === "ar" ? "اذهب" : "Visit"}
           </Link>
