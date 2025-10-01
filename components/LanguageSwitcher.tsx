@@ -1,19 +1,23 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
 type Locale = "ar" | "en";
 
-/**
- * زر تبديل اللغة:
- * - يكتشف اللغة الحالية من أول سيجمنت ("/ar" أو "/en")، وإن لم توجد يفترض "en".
- * - يبدّل اللغة مع الحفاظ على باقي المسار + الـquery + الـhash.
- * - ستايل متوافق مع ثيمك (bg-panel / border-border / text-ink / brand).
- */
-export default function LanguageSwitcher({
-  // اختياري: تمرير اللغة الحالية يدويًا، ولو ما مررت تُستنتج من الـpath
+/** التصدير الافتراضي: يغلّف الكومبوننت الداخلي بـ <Suspense> حتى يرضى Next أثناء الـ prerender */
+export default function LanguageSwitcher(props: { locale?: Locale; showFlag?: boolean }) {
+  return (
+    <Suspense fallback={null}>
+      <LanguageSwitcherInner {...props} />
+    </Suspense>
+  );
+}
+
+/** الكومبوننت الداخلي هو الوحيد الذي يستخدم useSearchParams */
+function LanguageSwitcherInner({
   locale,
   showFlag = true,
 }: {
